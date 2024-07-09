@@ -1,0 +1,35 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/3/a/PC.hdl
+/**
+ * A 16-bit counter.
+ * if      reset(t): out(t+1) = 0
+ * else if load(t):  out(t+1) = in(t)
+ * else if inc(t):   out(t+1) = out(t) + 1
+ * else              out(t+1) = out(t)
+ */
+CHIP PC {
+    IN in[16], reset, load, inc;
+    OUT out[16];
+    
+    PARTS:
+    // to have a specified conditional loop (else if), 
+    // work your way backwards from the the else case to the if case
+    
+    // else case is loaded
+    Register(in=out2, load=true, out=out, out=regOut);
+
+    // inc overrides else case statement
+    Inc16(in=regOut, out=incOut);
+    Mux16(a=in, b=incOut, sel=inc, out=out0);
+
+    // load case overrides inc case
+    Mux16(a=out0, b=in, sel=load, out=out1);
+
+    // reset overrides all the cases
+    Mux16(a=out1, b=false, sel=reset, out=out2);
+
+   
+}
+     
